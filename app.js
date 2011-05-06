@@ -1,7 +1,8 @@
 var io = require('socket.io')
-  , express = require('express');
+  , express = require('express')
+  , config = require('./config.json')
+  , data = require('./lib/data.js')
     
-
 ///////////////////////////////////////////////////////////////////////////////
 // express app configuration
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +30,7 @@ app.get("/signal", function(req, res) {
     stats.ua = req.headers["user-agent"]
     
     // TODO: send to the database
-
+    data.persistSignal(stats);
     console.log("received signal", stats);
 });
 
