@@ -1,0 +1,13 @@
+{
+  "name": "socket.io-probe",
+  "version": "0.0.1",
+  "description": "Statistics for websockets and fallbacks using socket.io",
+  "keywords": ["socketio", "websockets", "statistics"],
+  "author": "Mike Brevoort <mike@brevoort.com (http://mike.brevoort.com)",
+  "dependencies": {
+    "socket.io": "= 0.6.x",
+    "express": ">= 2.3.2"
+  
+  },
+  "engines": { "node": "= 0.4.x" }
+}
