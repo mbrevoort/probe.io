@@ -7,7 +7,8 @@
   "dependencies": {
     "socket.io": "= 0.6.x",
     "express": "= 2.3.x",
-	"request": "= 1.9.x"
+	"request": "= 1.9.x",
+	"useragent": "0.1.x"
   },
   "engines": { "node": "= 0.4.x" }
 }

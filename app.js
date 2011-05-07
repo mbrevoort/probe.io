@@ -2,6 +2,7 @@ var io = require('socket.io')
   , express = require('express')
   , config = require('./config.json')
   , data = require('./lib/data.js')
+  , useragent = require('useragent')
     
 ///////////////////////////////////////////////////////////////////////////////
 // express app configuration
@@ -27,9 +28,21 @@ app.get("/signal", function(req, res) {
     // storing the signal details in the database
     var stats = req.query;
     delete stats.nocache;
-    stats.ua = req.headers["user-agent"]
+    stats.ua_raw = req.headers["user-agent"];
+    var ua = useragent.parser(stats.ua_raw);
+    stats.browser = {
+        family: ua.family,
+        v1: ua.V1,
+        v2: ua.V2,
+        v3: ua.V3
+    };
+    stats.os = {
+        family: ua.os.family,
+        v1: ua.os.V1,
+        v2: ua.os.V2,
+        v3: ua.os.V3
+    };
     
-    // TODO: send to the database
     data.persistSignal(stats);
     console.log("received signal", stats);
 });
