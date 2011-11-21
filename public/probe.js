@@ -7,9 +7,7 @@
         client_message_duration: -1,
         disconnect_time: -1,
         disconnect_duration: -1,
-        
-        transport: "",
-        remembered_transport: false,
+        transport: ""
     };
     
     // return an ampersand deliminated ,key value, querystring representation of the stats
@@ -33,16 +31,14 @@
 
     // define a new socket and initiate a connection
     // TODO specify location of socket by figuring out what server this script was requested from
-    var socket = new global.io.Socket();
-    socket.connect();
+    var socket = new global.io.connect();
     
     // on connection, start timing and initialize the stats
     // then issue a ping on the connection
     socket.on('connect', function(){
         var now = new Date().getTime();
         stats.connect_duration = now - stats.start_time;
-        stats.transport = socket.transport && (socket.transport.type);
-        stats.remembered_transport = socket._rememberedTransport || false;
+        stats.transport = socket.socket && socket.socket.transport && socket.socket.transport.name;
         stats.client_message_time = now;
 
         console.log("connected", stats.connect_duration, stats, socket);        
