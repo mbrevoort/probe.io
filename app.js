@@ -1,9 +1,10 @@
 var io = require('socket.io')
   , express = require('express')
-  , config = require('./config.json')
-  , data = require('./lib/data.js')
+  // , config = require('./config.json')
+  , data = require('./lib/data-fs.js')
   , useragent = require('useragent')
-    
+  , ONEBYONEGIF = new Buffer("R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", 'base64');
+  
 ///////////////////////////////////////////////////////////////////////////////
 // express app configuration
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,7 +45,11 @@ app.get("/signal", function(req, res) {
     };
     
     data.persistSignal(stats);
-    console.log("received signal", stats);
+    //console.log("received signal", stats);
+    
+    res.setHeader("Content-Type", "image/gif");
+    res.end(ONEBYONEGIF);
+    
 });
 
 // we should only require one javascript include rather than needing to separately 
@@ -61,9 +66,13 @@ app.get("/probe.js", function(req, res) {
 // configure  socket.io 
 ///////////////////////////////////////////////////////////////////////////////
 
-var socket = io.listen(app); 
+var io = io.listen(app); 
 
-socket.on('connection', function(client) {
+io.configure(function () {
+  io.set('transports', ['websocket', 'flashsocket', 'xhr-polling']);
+});
+
+io.sockets.on('connection', function(client) {
     
     // once we have a new connection, record the time on the connection so we can
     // send the client a ping message and measure how long it takes to receive a

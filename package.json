@@ -5,7 +5,7 @@
   "keywords": ["socketio", "websockets", "statistics", "probe"],
   "author": "Mike Brevoort <mike@brevoort.com (http://mike.brevoort.com)",
   "dependencies": {
-    "socket.io": "= 0.6.x",
+    "socket.io": "0.8.7",
     "express": "= 2.3.x",
 	"request": "= 1.9.x",
 	"useragent": "0.1.x"
