@@ -5,16 +5,10 @@
         transports: []
     };
 
-    // return an ampersand deliminated ,key value, querystring representation of the stats
-
+    var debug = false;
 
     function serializeStats() {
         return global.io.JSON.stringify(stats);
-        // var items = [];
-        // Object.keys(stats).forEach(function(key) {
-        //     items.push(encodeURIComponent(key) + "=" + encodeURIComponent(stats[key]));              
-        // });
-        // return items.join("&");
     }
 
     // Send the signal beacon results by inserting a hidden image tag at the end of the body
@@ -52,7 +46,7 @@
             stat.name = socket.socket && socket.socket.transport && socket.socket.transport.name;
             stat.client_message_time = now;
 
-            console.log("connected", stat.connect_duration, stat, socket);
+            debug && console.log("connected", stat.connect_duration, stat, socket);
             socket.send("ping");
         });
 
@@ -94,7 +88,7 @@
             var now = new Date().getTime();
             stat.disconnect_duration = now - stat.disconnect_time;
             probeFinished(transport, stat);
-            console.log("disconnected", stat);
+            debug && console.log("disconnected", stat);
 
             // remove the event handlers and try to eliminate any references tosocket
             socket.removeAllListeners('disconnect');
