@@ -8,7 +8,7 @@
     var debug = false;
 
     function serializeStats(stats) {
-        return global.io.JSON.stringify(stats);
+        return encodeURIComponent( global.io.JSON.stringify(stats) );
     }
 
     // Send the signal beacon results by inserting a hidden image tag at the end of the body
