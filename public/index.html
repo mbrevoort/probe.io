@@ -55,10 +55,22 @@
 			font-size: 80%;
 			font-style: italic;
 		}
+
+		.clear {
+			clear:both;
+		}
+
+		.info {
+			font-style: italic;
+			margin-left:10px;
+		}
 	</style>
 </head>	
 <body>
 	<h1>Socket.io Probe</h1>
+	<p class="info">
+		Simple stats for Socket.io transports
+	</p>
 	<div id="transports">
 		<img src="/images/ajax-loader.gif"/>
 	</div>
@@ -69,10 +81,10 @@
 	<script type="text" id="transport_template">
 		<div class="transport">
 			<h2><%= name %></h2>
-			<div class="label">Time to connect:</div> <div class="value"><%= connect_duration %>ms </div>
-			<div class="label">RTT server initiated:</div> <div class="value"><%= server_message_rtt %>ms </div>
-			<div class="label">RTT client initiated:</div> <div class="value"><%= client_message_rtt %>ms </div>
-			<div class="label">Time to disconnect:</div> <div class="value"><%= disconnect_duration %>ms </div>
+			<div class="label">Time to connect:</div> <div class="value"><%= connect_duration %>ms </div><div class="clear"></div>
+			<div class="label">RTT server initiated:</div> <div class="value"><%= server_message_rtt %>ms </div><div class="clear"></div>
+			<div class="label">RTT client initiated:</div> <div class="value"><%= client_message_rtt %>ms </div><div class="clear"></div>
+			<div class="label">Time to disconnect:</div> <div class="value"><%= disconnect_duration %>ms </div><div class="clear"></div>
 		</div>
 	</script>
 	<script src="/js/underscore-min.js"></script>
