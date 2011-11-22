@@ -1,0 +1,17 @@
+
+div.transport {
+	width:220px;
+	float:left;
+	padding-left:10px;
+}
+
+div.label {
+	width:150px;
+	float:left;
+}
+
+div.value {
+	width: 60px;
+	float: right;
+	text-align: right;
+}

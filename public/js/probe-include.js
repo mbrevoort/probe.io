@@ -15,7 +15,7 @@
 
     var f = document.createElement('iframe');
     f.setAttribute('style', 'display:none;');
-    f.setAttribute('src', host + "/index.html");
+    f.setAttribute('src', host + "/iframe.html");
     f.setAttribute('name', "foo");
 
     document.getElementsByTagName("body")[0].appendChild(f);

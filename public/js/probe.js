@@ -7,7 +7,7 @@
 
     var debug = false;
 
-    function serializeStats() {
+    function serializeStats(stats) {
         return global.io.JSON.stringify(stats);
     }
 
@@ -17,10 +17,12 @@
 
     function sendSignal() {
         var img = document.createElement("img");
-        var signalUri = "/signal?json=" + serializeStats() + "&nocache=" + Math.floor(Math.random() * 1000000);
+        var signalUri = "/signal?json=" + serializeStats(stats) + "&nocache=" + Math.floor(Math.random() * 1000000);
         img.setAttribute('style', 'display:none;');
         img.setAttribute('src', signalUri);
         document.getElementsByTagName("body")[0].appendChild(img);
+
+        global.PROBE_SIGNAL && global.PROBE_SIGNAL(stats);
     }
 
 

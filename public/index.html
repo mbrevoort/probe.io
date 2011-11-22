@@ -3,12 +3,90 @@
 <head>
 	<title>Socket.io Probe</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" href="/app.css" type="text/css" />
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="/probe.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Sansita+One' rel='stylesheet' type='text/css'>
+	<style>
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			width:800px;
+			margin:auto;
+		}
+
+		h1 {
+			color: #D14836;
+			font-family: 'Sansita One', cursive;
+		}
+		div.transport {
+			width:220px;
+			float:left;
+			margin-right:20px;
+			padding: 10px;
+		}
+
+		div.transport h2 {
+			background-color: #D14836;
+			background-image: -webkit-linear-gradient(top,#dd4b39,#d14836);
+			background-image: -moz-linear-gradient(top,#dd4b39,#d14836);
+			background-image: -ms-linear-gradient(top,#dd4b39,#d14836);
+			background-image: -o-linear-gradient(top,#dd4b39,#d14836);
+			background-image: linear-gradient(top,#dd4b39,#d14836);
+			-webkit-border-radius: 2px;
+			-moz-border-radius: 2px;
+			border-radius: 2px;
+			border: 1px solid transparent;
+			color: #FFF;	
+			text-align: center;		
+		}
+
+		div.label {
+			width:150px;
+			float:left;
+			color: #666;
+		}
+
+		div.value {
+			width: 60px;
+			float: right;
+			text-align: right;
+		}
+
+		#notes {
+			clear:both;
+			padding-top:30px;
+			font-size: 80%;
+			font-style: italic;
+		}
+	</style>
 </head>	
 <body>
-	
+	<h1>Socket.io Probe</h1>
+	<div id="transports">
+		<img src="/images/ajax-loader.gif"/>
+	</div>
+	<div id="notes">
+		* round trip times are an average of 10 round trip messages
+	</div>
 
+	<script type="text" id="transport_template">
+		<div class="transport">
+			<h2><%= name %></h2>
+			<div class="label">Time to connect:</div> <div class="value"><%= connect_duration %>ms </div>
+			<div class="label">RTT server initiated:</div> <div class="value"><%= server_message_rtt %>ms </div>
+			<div class="label">RTT client initiated:</div> <div class="value"><%= client_message_rtt %>ms </div>
+			<div class="label">Time to disconnect:</div> <div class="value"><%= disconnect_duration %>ms </div>
+		</div>
+	</script>
+	<script src="/js/underscore-min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/probe.js"></script>
+	<script >
+		var transport_template = _.template(document.getElementById("transport_template").text);
+		function PROBE_SIGNAL(signal) {
+			var output = "";
+			_.each(signal.transports, function(transport) {
+				output += transport_template(transport);
+			});
+			document.getElementById("transports").innerHTML = output;
+		}
+	</script>
 </body>
 </html>
