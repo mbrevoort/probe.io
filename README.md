@@ -17,7 +17,7 @@ General approach
 
 * OOTB Socket.io-node
 * results will be reported as an image beacon cross domain
-* javascript served cross domain
-* results stored in MongoDB
+* javascript served cross domain in an iframe
+* results stored in MongoDB, CouchDb and/or MarkLogic (undecided)
 
 
