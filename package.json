@@ -1,7 +1,7 @@
 {
-  "name": "socket.io-probe",
+  "name": "probe.io",
   "version": "0.0.1",
-  "description": "Statistics for websockets and fallbacks using socket.io",
+  "description": "Statistics for socket.io transports",
   "keywords": ["socketio", "websockets", "statistics", "probe"],
   "author": "Mike Brevoort <mike@brevoort.com (http://mike.brevoort.com)",
   "dependencies": {
