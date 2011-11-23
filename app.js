@@ -1,5 +1,5 @@
 var io = require('socket.io'),
-    express = require('express')
+    express = require('express'),
     data = require('./lib/data.js'),
     //data_debug = new require('./lib/data-debug')(),
     dataFilePath = process.argv[2] || __dirname + "/data.jsontxt",
