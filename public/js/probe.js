@@ -2,7 +2,7 @@
 
     var stats = {
         time: Date.now(),
-        transports: [],
+        transports: {},
         aborted: [],
         io_version: io.version
     };
@@ -138,7 +138,7 @@
     probeTransport(['websocket', 'xhr-polling', 'flashsocket', 'htmlfile', 'jsonp-polling']);
 
     function probeFinished(transport, stat) {
-        if (stat.name == transport) stats.transports.push(stat);
+        if (stat.name == transport) stats.transports[transport] = stat;
     }
 
 
