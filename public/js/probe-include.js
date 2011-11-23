@@ -14,9 +14,8 @@
     host = (match_absolute && match_absolute[0]) || window.location.protocol + "//" + window.location.host;
 
     var f = document.createElement('iframe');
-    f.setAttribute('style', 'display:none;');
+    f.setAttribute('style', 'position: absolute; left: -500px; top: -500px;');
     f.setAttribute('src', host + "/iframe.html");
-    f.setAttribute('name', "foo");
 
     document.getElementsByTagName("body")[0].appendChild(f);
 
