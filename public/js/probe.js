@@ -1,7 +1,7 @@
 (function(global) {
 
     var stats = {
-        start_time: new Date().getTime(),
+        time: Date.now(),
         transports: [],
         aborted: [],
         io_version: io.version
@@ -34,7 +34,8 @@
 
         var transport = transports.shift(),
             stat = {},
-            clientMessageCount = 0;
+            clientMessageCount = 0,
+            start_time = Date.now();
 
         io.transports = [transport];
 
@@ -53,7 +54,7 @@
         socket.on('connect', function() {
             var now = new Date().getTime();
 
-            stat.connect_duration = now - stats.start_time;
+            stat.connect_duration = now - start_time;
             stat.name = socket.socket && socket.socket.transport && socket.socket.transport.name;
             stat.client_message_time = now;
 
