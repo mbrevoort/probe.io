@@ -2,7 +2,7 @@ var io = require('socket.io'),
     express = require('express'),
     data = require('./lib/data.js'),
     //data_debug = new require('./lib/data-debug')(),
-    dataFilePath = process.argv[2] || __dirname + "/data.jsontxt",
+    dataFilePath = process.argv[3] || __dirname + "/data.jsontxt",
     dataFilewriter = new require('./lib/data-fs')(dataFilePath),
     useragent = require('useragent'),
     ONEBYONEGIF = new Buffer("R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", 'base64');
