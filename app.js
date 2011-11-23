@@ -65,7 +65,7 @@ app.get("/probe.js", function(req, res) {
 var io = io.listen(app);
 
 io.configure(function() {
-    io.set('transports', ['websocket', 'flashsocket', 'xhr-polling']);
+    io.set('transports', ['websocket', 'xhr-polling', 'flashsocket', 'htmlfile', 'jsonp-polling']);
     io.disable('log');
 });
 

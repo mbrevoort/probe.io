@@ -2,7 +2,9 @@
 
     var stats = {
         start_time: new Date().getTime(),
-        transports: []
+        transports: [],
+        aborted: [],
+        io_version: io.version
     };
 
     var debug = false;
@@ -29,27 +31,38 @@
     function probeTransport(transports) {
         if (transports.length === 0) return sendSignal();
 
+
         var transport = transports.shift(),
             stat = {},
             clientMessageCount = 0;
+
+        io.transports = [transport];
 
         // define a new socket and initiate a connection
         // TODO specify location of socket by figuring out what server this script was requested from
         var socket = new global.io.connect(undefined, {
             transports: [transport],
-            'force new connection': true
+            'try multiple transports': false,
+            'force new connection': true,
+            'reconnect': false
         });
+
 
         // on connection, start timing and initialize the stats
         // then issue a ping on the connection
         socket.on('connect', function() {
             var now = new Date().getTime();
+
             stat.connect_duration = now - stats.start_time;
             stat.name = socket.socket && socket.socket.transport && socket.socket.transport.name;
             stat.client_message_time = now;
 
             debug && console.log("connected", stat.connect_duration, stat, socket);
-            socket.send("ping");
+
+            if (stat.name !== transport) abort();
+            else socket.send("ping");
+
+
         });
 
         socket.on('message', function(data) {
@@ -87,24 +100,45 @@
         // window.io, etc.
         // Also send the signal beacon reporting the results
         socket.on('disconnect', function() {
-            var now = new Date().getTime();
+            var now = Date.now();
             stat.disconnect_duration = now - stat.disconnect_time;
             probeFinished(transport, stat);
             debug && console.log("disconnected", stat);
+            cleanup()
 
-            // remove the event handlers and try to eliminate any references tosocket
+        });
+
+        socket.on('connect_failed', function() {
+            console && console.log && console.log("connect failed for " + transport);
+            abort();
+        });
+
+        socket.on('error', function(error) {
+            console.log("error", error);
+        });
+
+        function cleanup() {
             socket.removeAllListeners('disconnect');
             socket.removeAllListeners('connect');
             socket.removeAllListeners('message');
             socket = null;
             probeTransport(transports);
-        });
+        }
+
+        function abort() {
+            console && console.log && console.log("aborting transport " + transport);
+            stats.aborted.push(transport);
+            cleanup();
+        }
+
+
     }
 
-    probeTransport(['websocket', 'xhr-polling', 'flashsocket']);
+    probeTransport(['websocket', 'xhr-polling', 'flashsocket', 'htmlfile', 'jsonp-polling']);
 
     function probeFinished(transport, stat) {
         if (stat.name == transport) stats.transports.push(stat);
     }
+
 
 }(window));
