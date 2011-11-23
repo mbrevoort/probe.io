@@ -1,6 +1,9 @@
 var io = require('socket.io'),
     express = require('express')
-    data = require('./lib/data-debug.js'),
+    data = require('./lib/data.js'),
+    //data_debug = new require('./lib/data-debug')(),
+    dataFilePath = process.argv[2] || __dirname + "/data.jsontxt",
+    dataFilewriter = new require('./lib/data-fs')(dataFilePath),
     useragent = require('useragent'),
     ONEBYONEGIF = new Buffer("R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", 'base64');
 
@@ -14,6 +17,8 @@ app.configure(function() {
 });
 
 module.exports = app;
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // image beacon reporting rout
@@ -43,7 +48,7 @@ app.get("/signal", function(req, res) {
 
     stats.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-    data.persistSignal(stats);
+    data.signal(stats);
     //console.log("received signal", stats);
     res.setHeader("Content-Type", "image/gif");
     res.end(ONEBYONEGIF);
