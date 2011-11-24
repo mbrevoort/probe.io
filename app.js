@@ -18,6 +18,8 @@ app.configure(function() {
 
 module.exports = app;
 
+if(process.env.COUCHDB_URL)
+    var couchWriter = new require(process.env.COUCHDB_URL);
 
 
 ///////////////////////////////////////////////////////////////////////////////
