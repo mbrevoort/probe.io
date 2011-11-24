@@ -1,7 +1,7 @@
 (function(global) {
 
     var stats = {
-        time: Date.now(),
+        datetime: (new Date).getTime(),
         transports: {},
         aborted: [],
         io_version: io.version
@@ -35,7 +35,7 @@
         var transport = transports.shift(),
             stat = {},
             clientMessageCount = 0,
-            start_time = Date.now();
+            start_time = (new Date).getTime();
 
         io.transports = [transport];
 
@@ -52,7 +52,7 @@
         // on connection, start timing and initialize the stats
         // then issue a ping on the connection
         socket.on('connect', function() {
-            var now = new Date().getTime();
+            var now = (new Date).getTime();
 
             stat.connect_duration = now - start_time;
             stat.name = socket.socket && socket.socket.transport && socket.socket.transport.name;
@@ -67,12 +67,12 @@
         });
 
         socket.on('message', function(data) {
-            var now = new Date().getTime();
+            var now = (new Date).getTime();
 
             // if we receive a pong message it should be in response to our
-            // ping message we sent. calculate the averate RTT from the client for 10 iteratons
+            // ping message we sent. calculate the averate RTT from the client for 5 iteratons
             if (data === "pong") {
-                if (++clientMessageCount === 10) stat.client_message_rtt = (now - stat.client_message_time) / clientMessageCount;
+                if (++clientMessageCount === 5) stat.client_message_rtt = (now - stat.client_message_time) / clientMessageCount;
                 else socket.send("ping");
             }
 
@@ -101,7 +101,7 @@
         // window.io, etc.
         // Also send the signal beacon reporting the results
         socket.on('disconnect', function() {
-            var now = Date.now();
+            var now = (new Date).getTime();
             stat.disconnect_duration = now - stat.disconnect_time;
             probeFinished(transport, stat);
             debug && console.log("disconnected", stat);
@@ -110,7 +110,7 @@
         });
 
         socket.on('connect_failed', function() {
-            console && console.log && console.log("connect failed for " + transport);
+            window.console && window.console.log && window.console.log("connect failed for " + transport);
             abort();
         });
 
@@ -127,7 +127,7 @@
         }
 
         function abort() {
-            console && console.log && console.log("aborting transport " + transport);
+            window.console && window.console.log && window.console.log("aborting transport " + transport);
             stats.aborted.push(transport);
             cleanup();
         }

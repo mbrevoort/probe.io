@@ -91,7 +91,7 @@ io.sockets.on('connection', function(client) {
     client.on('message', function(message) {
         if (message === "ping") client.send("pong");
         else if (message === "pong") {
-            if (++client.serverMessageCount === 10) client.send((Date.now() - client.server_send_time) / client.serverMessageCount);
+            if (++client.serverMessageCount === 5) client.send((Date.now() - client.server_send_time) / client.serverMessageCount);
             else client.send("ping");
         }
     });
