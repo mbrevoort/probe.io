@@ -1,7 +1,7 @@
 (function(global) {
 
     var stats = {
-        datetime: (new Date).getTime(),
+        time: (new Date).getTime(),
         transports: {},
         aborted: [],
         io_version: io.version
