@@ -35,43 +35,43 @@ ddoc.views.byBrowser = {
   map: function(doc) {
     Object.keys(doc.transports).forEach(function(transport) {
       var t = doc.transports[transport];
-      if( t.client_message_rtt && t.server_message_rtt && t.connect_duration )
+      if( t.rtt && t.serial && t.connect)
         emit([doc.browser.family, doc.browser.v1, t.name], { 
-          client_message_rtt: t.client_message_rtt, 
-          server_message_rtt: t.server_message_rtt, 
-          connect: t.connect_duration,
-          disconnect: t.disconnect_duration,
+          rtt: t.rtt, 
+          serial: t.serial,
+          connect: t.connect,
+          disconnect: t.disconnect,
           count: 1
         });    
     });
   },
   reduce: function(keys, values, rereduce) {
-    var client_accum = 0
-      , server_accum = 0
+    var rtt_accum = 0
+      , serial_accum = 0
       , connect_accum = 0
       , disconnect_accum = 0
-      , client_avg = 0
-      , server_avg = 0
+      , rtt_avg = 0
+      , serial_avg = 0
       , connect_avg = 0
       , disconnect_avg = 0
       , count = 0;
 
     values.forEach(function(v) {
-      client_accum += v.client_message_rtt * v.count;
-      server_accum += v.server_message_rtt * v.count;
+      rtt_accum += v.rtt * v.count;
+      serial_accum += v.serial * v.count;
       connect_accum += v.connect * v.count;
       disconnect_accum += (v.disconnect || 0) * v.count;
       count += v.count;
     })
 
-    client_avg = client_accum / count;
-    server_avg = server_accum / count;
+    rtt_avg = rtt_accum / count;
+    serial_avg = serial_accum / count;
     connect_avg = connect_accum / count;
     disconnect_avg = disconnect_accum / count;
 
     return { 
-      client_message_rtt: client_avg, 
-      server_message_rtt: server_avg, 
+      rtt: rtt_avg, 
+      serial: serial_avg,
       connect: connect_avg,
       disconnect: disconnect_avg,
       count: count 
@@ -85,7 +85,7 @@ ddoc.views.incompletes = {
   map: function(doc) {
     Object.keys(doc.transports).forEach(function(transport) {
       var t = doc.transports[transport];
-      if( !t.client_message_rtt || !t.server_message_rtt )
+      if( !t.rtt || !t.serial )
         emit(doc._id, doc);  
     });
   }

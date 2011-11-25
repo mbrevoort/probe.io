@@ -29,16 +29,16 @@ function renderStats(stats) {
         data = [],
         series = [],
         numSeries = Object.keys(stat.transports).length,
-        S_RTT = 0, C_RTT = 1*(numSeries+1), CONNECT = 2*(numSeries+1),
+        RTT = 0, SERIAL = 1*(numSeries+1), CONNECT = 2*(numSeries+1),
         middle = Math.floor(numSeries/2),
-        ticks = [[S_RTT + middle, "Server RTT"], [C_RTT + middle, "Client RTT"], [CONNECT + middle, "Connect"]];
+        ticks = [[RTT + middle, "RTT"], [SERIAL + middle, "Serial"], [CONNECT + middle, "Connect"]];
 
     $('#stats').append('<h1>' + browserKey + ' (' + stat.total + ')</h1>');
 
     $.each(Object.keys(stat.transports), function(j, transportKey) {
       var transport = stat.transports[transportKey];
 
-      data = [[transport.server_message_rtt, S_RTT+j], [transport.client_message_rtt, C_RTT+j], [transport.connect, CONNECT+j]]
+      data = [[transport.rtt, RTT+j], [transport.serial, SERIAL+j], [transport.connect, CONNECT+j]]
 
       series.push({
         data: data,
@@ -90,8 +90,8 @@ function renderStats(stats) {
       var stat = stats[browserKey];
       $.each(Object.keys(stat.transports), function(j, transportKey) {
         var transport = stat.transports[transportKey];
-        max = (transport.client_message_rtt > max) ? transport.client_message_rtt : max;
-        max = (transport.server_message_rtt > max) ? transport.server_message_rtt : max;
+        max = (transport.rtt > max) ? transport.rtt : max;
+        max = (transport.serial > max) ? transport.serial : max;
         max = (transport.connect > max) ? transport.connect : max;
       });
     });
