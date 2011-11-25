@@ -29,16 +29,16 @@ function renderStats(stats) {
         data = [],
         series = [],
         numSeries = Object.keys(stat.transports).length,
-        CONNECT = 0, S_RTT = 1*(numSeries+1), C_RTT = 2*(numSeries+1), DISCONNECT = 3*(numSeries+1),
-        ticks = [[CONNECT + (Math.floor(numSeries/2)), "Connect"], [S_RTT + (Math.floor(numSeries/2)), "Server RTT"], [C_RTT + 
-          (Math.floor(numSeries/2)), "Client RTT"], [DISCONNECT + (Math.floor(numSeries/2)), "Disconnect"]];
+        S_RTT = 0, C_RTT = 1*(numSeries+1), CONNECT = 2*(numSeries+1),
+        middle = Math.floor(numSeries/2),
+        ticks = [[S_RTT + middle, "Server RTT"], [C_RTT + middle, "Client RTT"], [CONNECT + middle, "Connect"]];
 
     $('#stats').append('<h1>' + browserKey + ' (' + stat.total + ')</h1>');
 
     $.each(Object.keys(stat.transports), function(j, transportKey) {
       var transport = stat.transports[transportKey];
 
-      data = [[transport.connect, CONNECT+j], [transport.server_message_rtt, S_RTT+j], [transport.client_message_rtt, C_RTT+j], [transport.disconnect, DISCONNECT+j]]
+      data = [[transport.server_message_rtt, S_RTT+j], [transport.client_message_rtt, C_RTT+j], [transport.connect, CONNECT+j]]
 
       series.push({
         data: data,
@@ -51,7 +51,36 @@ function renderStats(stats) {
 
     var chartElement = $('<div style="width: 600px; height: 300px;"></div>');
     $('#stats').append(chartElement);
-    $.plot(chartElement, series, { yaxis: { ticks: ticks }, xaxis: { max: xAxisMax }, series: {multiplebars: true}});
+    $.plot(chartElement, series.reverse(), { 
+      yaxis: { ticks: ticks }, 
+      xaxis: { max: xAxisMax }, 
+      series: {multiplebars: true}, 
+      grid: { hoverable: true, clickable: true }
+    });
+
+
+    chartElement.bind("plothover", function (event, pos, item) {
+        $("#x").text(pos.x.toFixed(2));
+        $("#y").text(pos.y.toFixed(2));
+
+        if (item) {
+            if (previousPoint != item.dataIndex) {
+                previousPoint = item.dataIndex;
+                
+                $("#tooltip").remove();
+                var x = item.datapoint[0].toFixed(2),
+                    y = item.datapoint[1].toFixed(2);
+                
+                showTooltip(item.pageX, item.pageY,
+                            item.series.label + " " + x + "ms");
+            }
+        }
+        else {
+            $("#tooltip").remove();
+            previousPoint = null;            
+        }
+
+    });
 
   })
 
@@ -63,13 +92,24 @@ function renderStats(stats) {
         var transport = stat.transports[transportKey];
         max = (transport.client_message_rtt > max) ? transport.client_message_rtt : max;
         max = (transport.server_message_rtt > max) ? transport.server_message_rtt : max;
-        max = (transport.disconnect > max) ? transport.disconnect : max;
         max = (transport.connect > max) ? transport.connect : max;
       });
     });
     return max;
   }
 
+  function showTooltip(x, y, contents) {
+      $('<div id="tooltip">' + contents + '</div>').css( {
+          position: 'absolute',
+          display: 'none',
+          top: y + 5,
+          left: x + 5,
+          border: '1px solid #fdd',
+          padding: '2px',
+          'background-color': '#fee',
+          opacity: 0.80
+      }).appendTo("body").fadeIn(200);
+  }
 
 
 }
