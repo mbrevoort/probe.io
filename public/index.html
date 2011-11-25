@@ -75,15 +75,17 @@
 		<img src="/images/ajax-loader.gif"/>
 	</div>
 	<div id="notes">
-		* round trip times are an average of 5 round trip messages
+		* round trip times are an average of 5 round trip messages<br/>
+		* serial push is the time it takes for the server to push 10 messages
 	</div>
 
 	<script type="text" id="transport_template">
 		<div class="transport">
 			<h2><%= name %></h2>
-			<div class="label">Connect:</div> <div class="value"><%= connect_duration %>ms </div><div class="clear"></div>
-			<div class="label">Round Trip:</div> <div class="value"><%= rtt %>ms </div><div class="clear"></div>
-			<div class="label">Disconnect:</div> <div class="value"><%= disconnect_duration %>ms </div><div class="clear"></div>
+			<div class="label">Connect:</div> <div class="value"><%= connect %>ms </div><div class="clear"></div>
+			<div class="label">Round Trip Avg:</div> <div class="value"><%= rtt %>ms </div><div class="clear"></div>
+			<div class="label">Serial Push:</div> <div class="value"><%= serial %>ms </div><div class="clear"></div>
+			<div class="label">Total:</div> <div class="value"><%= total %>ms </div><div class="clear"></div>
 		</div>
 	</script>
 	<script src="/js/underscore-min.js"></script>

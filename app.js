@@ -81,7 +81,13 @@ io.sockets.on('connection', function(client) {
     // when we receive a message it will be a ping request from the client that we should respond
     // to with a pong
     client.on('message', function(message) {
-        if (message === "ping") client.send("pong");
+        if (message === 'ping') client.send('pong');
+
+        if (message === 'start serial') {
+            for(var i=0; i < 10; i++) {
+                client.send("serial");
+            }
+        }
 
     });
 

@@ -35,6 +35,9 @@
         var transport = transports.shift(),
             stat = {},
             rttCount = 0,
+            serialCount = 0,
+            serial_start = null,
+            disconnect_time = null,
             start_time = (new Date).getTime();
 
         io.transports = [transport];
@@ -54,11 +57,11 @@
         socket.on('connect', function() {
             var now = (new Date).getTime();
 
-            stat.connect_duration = now - start_time;
+            stat.connect = Math.round(now - start_time);
             stat.name = socket.socket && socket.socket.transport && socket.socket.transport.name;
             stat.rtt_start = now;
 
-            debug && console.log("connected", stat.connect_duration, stat, socket);
+            log(transport + " connected", stat.connect, stat, socket);
 
             if (stat.name !== transport) abort();
             else socket.send("ping");
@@ -73,15 +76,25 @@
             // ping message we sent. calculate the averate RTT from the client for 5 iteratons
             if (data === "pong") {
                 if (++rttCount === 5) {
-                    stat.rtt = (now - stat.rtt_start) / rttCount;                    
+                    stat.rtt = Math.round((now - stat.rtt_start) / rttCount);
+
+
+                    serial_start = now;
+                    socket.send("start serial");
+
+
+                }
+                else socket.send("ping");
+            }
+            else if (data === 'serial') {
+                if(++serialCount === 5) {
+                    stat.serial = now - serial_start;
 
                     // we're done, we don't need the socket anymore
                     // TODO implement a timeout at each stage so we don't error out and orphan callbacks
                     // and leave the socket open
                     socket.disconnect();
-
                 }
-                else socket.send("ping");
             }
 
 
@@ -94,21 +107,22 @@
         // Also send the signal beacon reporting the results
         socket.on('disconnect', function() {
             var now = (new Date).getTime();
-            stat.disconnect_time = now;
-            stat.disconnect_duration = now - stat.disconnect_time;
+            stat.disconnect = Math.round(now - disconnect_time);
+            stat.total = Math.round(now - start_time);
             probeFinished(transport, stat);
-            debug && console.log("disconnected", stat);
+            log(transport + " disconnected", stat);
             cleanup()
 
         });
 
         socket.on('connect_failed', function() {
-            window.console && window.console.log && window.console.log("connect failed for " + transport);
+            log("connect failed for " + transport);
             abort();
         });
 
         socket.on('error', function(error) {
-            console.log("error", error);
+            abort();
+            log("error", error);
         });
 
         function cleanup() {
@@ -120,7 +134,7 @@
         }
 
         function abort() {
-            window.console && window.console.log && window.console.log("aborting transport " + transport);
+            log("aborting transport " + transport);
             stats.aborted.push(transport);
             cleanup();
         }
@@ -132,6 +146,10 @@
 
     function probeFinished(transport, stat) {
         if (stat.name == transport) stats.transports[transport] = stat;
+    }
+
+    function log() {
+        debug && global.console && global.console.log && global.console.log(arguments);
     }
 
 
