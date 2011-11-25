@@ -34,7 +34,7 @@
 
         var transport = transports.shift(),
             stat = {},
-            clientMessageCount = 0,
+            rttCount = 0,
             start_time = (new Date).getTime();
 
         io.transports = [transport];
@@ -56,7 +56,7 @@
 
             stat.connect_duration = now - start_time;
             stat.name = socket.socket && socket.socket.transport && socket.socket.transport.name;
-            stat.client_message_time = now;
+            stat.rtt_start = now;
 
             debug && console.log("connected", stat.connect_duration, stat, socket);
 
@@ -72,28 +72,20 @@
             // if we receive a pong message it should be in response to our
             // ping message we sent. calculate the averate RTT from the client for 5 iteratons
             if (data === "pong") {
-                if (++clientMessageCount === 5) stat.client_message_rtt = (now - stat.client_message_time) / clientMessageCount;
+                if (++rttCount === 5) {
+                    stat.rtt = (now - stat.rtt_start) / rttCount;                    
+
+                    // we're done, we don't need the socket anymore
+                    // TODO implement a timeout at each stage so we don't error out and orphan callbacks
+                    // and leave the socket open
+                    socket.disconnect();
+
+                }
                 else socket.send("ping");
             }
 
-            // if we receive a ping, we need to respond with a pong. The server sent
-            // us a ping to measure RTT from the server perspective
-            else if (data === "ping") {
-                socket.send("pong");
-            }
 
-            // the only other message the server should send us should be the result of the
-            // server RTT measurement. The contents of the message should be an integer representing
-            // the millisecond duration of a server initiated message round trip ping/pong
-            else {
-                stat.server_message_rtt = Number(data);
 
-                // we're done, we don't need the socket anymore
-                // TODO implement a timeout at each stage so we don't error out and orphan callbacks
-                // and leave the socket open
-                stat.disconnect_time = now;
-                socket.disconnect();
-            }
 
         });
 
@@ -102,6 +94,7 @@
         // Also send the signal beacon reporting the results
         socket.on('disconnect', function() {
             var now = (new Date).getTime();
+            stat.disconnect_time = now;
             stat.disconnect_duration = now - stat.disconnect_time;
             probeFinished(transport, stat);
             debug && console.log("disconnected", stat);

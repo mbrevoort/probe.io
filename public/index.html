@@ -81,10 +81,9 @@
 	<script type="text" id="transport_template">
 		<div class="transport">
 			<h2><%= name %></h2>
-			<div class="label">Time to connect:</div> <div class="value"><%= connect_duration %>ms </div><div class="clear"></div>
-			<div class="label">RTT server initiated:</div> <div class="value"><%= server_message_rtt %>ms </div><div class="clear"></div>
-			<div class="label">RTT client initiated:</div> <div class="value"><%= client_message_rtt %>ms </div><div class="clear"></div>
-			<div class="label">Time to disconnect:</div> <div class="value"><%= disconnect_duration %>ms </div><div class="clear"></div>
+			<div class="label">Connect:</div> <div class="value"><%= connect_duration %>ms </div><div class="clear"></div>
+			<div class="label">Round Trip:</div> <div class="value"><%= rtt %>ms </div><div class="clear"></div>
+			<div class="label">Disconnect:</div> <div class="value"><%= disconnect_duration %>ms </div><div class="clear"></div>
 		</div>
 	</script>
 	<script src="/js/underscore-min.js"></script>

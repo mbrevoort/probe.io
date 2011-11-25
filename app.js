@@ -1,7 +1,7 @@
 var io = require('socket.io'),
     express = require('express'),
     data = require('./lib/data.js'),
-    //data_debug = new require('./lib/data-debug')(),
+    data_debug = new require('./lib/data-debug')(),
     dataFilePath = process.argv[3] || __dirname + "/data.jsontxt",
     dataFilewriter = new require('./lib/data-fs')(dataFilePath),
     useragent = require('useragent'),
@@ -78,24 +78,11 @@ io.configure(function() {
 
 io.sockets.on('connection', function(client) {
 
-    client.serverMessageCount = 0;
-
-    // once we have a new connection, record the time on the connection so we can
-    // send the client a ping message and measure how long it takes to receive a
-    // pong response. Once we receive the pong, we'll send the measurement down to 
-    // the client
-    client.server_send_time = (new Date().getTime());
-    client.send("ping");
-
-    // when we receive a message it will either be a pong response to the ping we 
-    // sent just above or it will be a ping request from the client that we should respond
+    // when we receive a message it will be a ping request from the client that we should respond
     // to with a pong
     client.on('message', function(message) {
         if (message === "ping") client.send("pong");
-        else if (message === "pong") {
-            if (++client.serverMessageCount === 5) client.send((Date.now() - client.server_send_time) / client.serverMessageCount);
-            else client.send("ping");
-        }
+
     });
 
     client.on('disconnect', function() {
