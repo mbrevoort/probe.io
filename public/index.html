@@ -15,6 +15,10 @@
 			color: #D14836;
 			font-family: 'Sansita One', cursive;
 		}
+
+		a {
+			color: #D14836;
+		}
 		div.transport {
 			width:220px;
 			float:left;
@@ -76,7 +80,8 @@
 	</div>
 	<div id="notes">
 		* round trip times are an average of 5 round trip messages<br/>
-		* serial push is the time it takes for the server to push 10 messages
+		* serial push is the time it takes for the server to push 10 messages<br/><br/>
+		Check out the <a href="http://probeio.iriscouch.com/signals/_design/app/index.html">Aggregated Stats</a>
 	</div>
 
 	<script type="text" id="transport_template">
@@ -101,5 +106,7 @@
 			document.getElementById("transports").innerHTML = output;
 		}
 	</script>
+    <a href="https://github.com/mbrevoort/probe.io"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
+	
 </body>
 </html>

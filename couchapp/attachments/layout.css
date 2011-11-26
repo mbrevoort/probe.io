@@ -1,0 +1,52 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	width: 625px;
+	margin: auto;
+}
+
+h1 {
+	color: #D14836;
+	font-family: 'Sansita One', cursive;	
+}
+
+h2 {
+	border: 1px solid transparent;
+	color: #D14836;
+
+	font-size: 1.2em;
+	padding: 2px 5px;
+	font-weight: bold;
+}
+
+a {
+	color: #D14836;
+}
+
+p.info {
+	font-size: 0.8em;
+	padding-bottom: 30px;
+	font-style: italic;
+}
+
+
+.chart {
+	width: 600px; 
+	height: 150px;
+}
+
+.tooltip {
+	position: absolute;
+	color:#FFF;
+	border: 1px solid #CD4333;
+	padding: 3px;
+	background-color: #D14836;
+}
+
+.section {
+}
+
+span.count {
+	float: right;
+	margin-right: 20px;
+	font-size: 0.7em;;
+}

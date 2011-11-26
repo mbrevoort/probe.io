@@ -31,9 +31,11 @@ function renderStats(stats) {
         numSeries = Object.keys(stat.transports).length,
         RTT = 0, SERIAL = 1*(numSeries+1), CONNECT = 2*(numSeries+1),
         middle = Math.floor(numSeries/2),
-        ticks = [[RTT + middle, "RTT"], [SERIAL + middle, "Serial"], [CONNECT + middle, "Connect"]];
-
-    $('#stats').append('<h1>' + browserKey + ' (' + stat.total + ')</h1>');
+        ticks = [[RTT + middle, "RTT"], [SERIAL + middle, "Serial"], [CONNECT + middle, "Connect"]],
+        elem = $('<div class="section"></div>');
+    
+    $('#stats').append(elem);
+    elem.append('<h2>' + browserKey + '<span class="count">(' + stat.total + ')</span></h2>');
 
     $.each(Object.keys(stat.transports), function(j, transportKey) {
       var transport = stat.transports[transportKey];
@@ -43,14 +45,15 @@ function renderStats(stats) {
       series.push({
         data: data,
         bars: { show: true, horizontal: true, align: "center", barWidth: 0.8 },
-        label: transportKey + " (" + Math.floor(transport.count/stat.total*100) + "%)"
+        label: transportKey + " (" + Math.floor(transport.count/stat.total*100) + "%)",
+        color: color(transportKey)
       });
 
 
     });
 
-    var chartElement = $('<div style="width: 600px; height: 300px;"></div>');
-    $('#stats').append(chartElement);
+    var chartElement = $('<div class="chart"></div>');
+    elem.append(chartElement);
     $.plot(chartElement, series.reverse(), { 
       yaxis: { ticks: ticks }, 
       xaxis: { max: xAxisMax }, 
@@ -70,8 +73,8 @@ function renderStats(stats) {
                 $("#tooltip").remove();
                 var x = item.datapoint[0].toFixed(2),
                     y = item.datapoint[1].toFixed(2);
-                
-                showTooltip(item.pageX, item.pageY,
+                console.log(item, pos, event);
+                showTooltip(pos.pageX+15, pos.pageY+15,
                             item.series.label + " " + x + "ms");
             }
         }
@@ -85,6 +88,7 @@ function renderStats(stats) {
   })
 
   function calculateXAxisMax(stats) {
+    return 2000;
     var max = 0;
     $.each(Object.keys(stats), function(i, browserKey) {
       var stat = stats[browserKey];
@@ -98,17 +102,22 @@ function renderStats(stats) {
     return max;
   }
 
+  function color(transport) {
+    if(transport === 'xhr-polling') return '#EDC240';
+    if(transport === 'websocket') return '#4DA74D';
+    if(transport === 'jsonp-polling') return '#AFD8F8';
+    if(transport === 'flashsocket') return '#CB4B4B';
+    if(transport === 'htmlfile') return 'violet';
+    return undefined;
+  }
+
   function showTooltip(x, y, contents) {
       $('<div id="tooltip">' + contents + '</div>').css( {
-          position: 'absolute',
           display: 'none',
           top: y + 5,
           left: x + 5,
-          border: '1px solid #fdd',
-          padding: '2px',
-          'background-color': '#fee',
-          opacity: 0.80
-      }).appendTo("body").fadeIn(200);
+          opacity: 0.90
+      }).addClass('tooltip').appendTo("body").fadeIn(200);
   }
 
 
