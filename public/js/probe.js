@@ -97,9 +97,6 @@
                 }
             }
 
-
-
-
         });
 
         // when the socket disconnects, do whatever we can to cleanup. unregister listeners, wack
