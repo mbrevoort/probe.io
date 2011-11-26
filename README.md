@@ -1,6 +1,11 @@
+Probe.io
+========
+
 Probe.io is a simple tracking mechanism for Socket.io transport statistics. 
 
-<img src="http://www.gravatar.com/avatar/7071119714e1a32441aca0c336657d3e?s=80"/>
+<a href="http://probe.brevoort.com"><img src="http://probe.brevoort.com/images/run.png"/></a>
+
+<a href="http//probestats.brevoort.com"><img src="http://probe.brevoort.com/images/view.png"/></a>
 
 Why?
 ====
