@@ -1,7 +1,9 @@
 Probe.io is a simple tracking mechanism for Socket.io transport statistics. 
 
+[[http://www.gravatar.com/avatar/7071119714e1a32441aca0c336657d3e?s=80]]
+
 Why?
-----
+====
 
 Websockets and various Comet style fallbacks create the ability for the
 server to push data to web clients, enabling a whole new catagory of 
@@ -18,7 +20,7 @@ My hope is that through community, we can generate enough diverse test data to m
 accurately assess the sitution.
 
 Probe
------
+=====
 
 The probe test can be [run directly](http://probe.brevoort.com) or embedded into any web page with a single
 line javascript include like this:
@@ -42,10 +44,10 @@ The probe captures the following data:
 * browser user agent details
 * client IP (to be used in the future to estimate geographical physical distance from client to server)
 
-__Note IE6 is not supported__
+**Note IE6 is not supported**
 
 Data and Statistics
-----------
+===================
 
 The probe publishes it's results back to the server via an image beacon. These results
 are currently being stored in [CouchDB](http://couchdb.apache.org/) database, generously hosted by [IrisCouch](http://www.iriscouch.com/) for free. 
@@ -54,7 +56,7 @@ All of the data is open and accessible, and through Couch, you can easily replic
 Basic aggregate statistics can be viewed [here](http://probestats.brevoort.com).
 
 Roadmap
--------
+=======
 
 * Calculate estimated geographical distance
 * Improve error detection when transports fail
