@@ -40,6 +40,7 @@ ddoc.views.byBrowser = {
           serial: t.serial,
           connect: t.connect,
           disconnect: t.disconnect,
+          total: t.total,
           count: 1
         });    
     });
@@ -49,10 +50,12 @@ ddoc.views.byBrowser = {
       , serial_accum = 0
       , connect_accum = 0
       , disconnect_accum = 0
+      , total_accum = 0
       , rtt_avg = 0
       , serial_avg = 0
       , connect_avg = 0
       , disconnect_avg = 0
+      , total_avg = 0
       , count = 0;
 
     values.forEach(function(v) {
@@ -60,6 +63,7 @@ ddoc.views.byBrowser = {
       serial_accum += v.serial * v.count;
       connect_accum += v.connect * v.count;
       disconnect_accum += (v.disconnect || 0) * v.count;
+      total_accum += v.total * v.count;
       count += v.count;
     })
 
@@ -67,12 +71,14 @@ ddoc.views.byBrowser = {
     serial_avg = serial_accum / count;
     connect_avg = connect_accum / count;
     disconnect_avg = disconnect_accum / count;
+    total_avg = total_accum / count;
 
     return { 
       rtt: rtt_avg, 
       serial: serial_avg,
       connect: connect_avg,
       disconnect: disconnect_avg,
+      total: total_avg,
       count: count 
     };
   }

@@ -29,9 +29,9 @@ function renderStats(stats) {
         data = [],
         series = [],
         numSeries = Object.keys(stat.transports).length,
-        RTT = 0, SERIAL = 1*(numSeries+1), CONNECT = 2*(numSeries+1),
+        TOTAL = 0, RTT = 1*(numSeries+1), SERIAL = 2*(numSeries+1), CONNECT = 3*(numSeries+1),
         middle = Math.floor(numSeries/2),
-        ticks = [[RTT + middle, "RTT"], [SERIAL + middle, "Serial"], [CONNECT + middle, "Connect"]],
+        ticks = [[TOTAL + middle, "Total"], [RTT + middle, "RTT"], [SERIAL + middle, "Serial"], [CONNECT + middle, "Connect"]],
         elem = $('<div class="section"></div>');
     
     $('#stats').append(elem);
@@ -40,7 +40,7 @@ function renderStats(stats) {
     $.each(Object.keys(stat.transports), function(j, transportKey) {
       var transport = stat.transports[transportKey];
 
-      data = [[transport.rtt, RTT+j], [transport.serial, SERIAL+j], [transport.connect, CONNECT+j]]
+      data = [[transport.total, TOTAL+j], [transport.rtt, RTT+j], [transport.serial, SERIAL+j], [transport.connect, CONNECT+j]]
 
       series.push({
         data: data,
@@ -73,9 +73,7 @@ function renderStats(stats) {
                 $("#tooltip").remove();
                 var x = item.datapoint[0].toFixed(2),
                     y = item.datapoint[1].toFixed(2);
-                console.log(item, pos, event);
-                showTooltip(pos.pageX+15, pos.pageY+15,
-                            item.series.label + " " + x + "ms");
+                showTooltip(pos.pageX+15, pos.pageY+15, item.series.label + " " + x + "ms");
             }
         }
         else {
