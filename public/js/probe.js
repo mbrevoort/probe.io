@@ -40,6 +40,10 @@
             disconnect_time = null,
             start_time = (new Date).getTime();
 
+        if (transport == 'jsonp-polling' && navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+            abort();
+        }
+
         io.transports = [transport];
 
         // define a new socket and initiate a connection
@@ -123,10 +127,12 @@
         });
 
         function cleanup() {
-            socket.removeAllListeners('disconnect');
-            socket.removeAllListeners('connect');
-            socket.removeAllListeners('message');
-            socket = null;
+            if(socket) {
+                socket.removeAllListeners('disconnect');
+                socket.removeAllListeners('connect');
+                socket.removeAllListeners('message');
+                socket = null;
+            }
             probeTransport(transports);
         }
 
