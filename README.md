@@ -4,7 +4,7 @@ Probe.io
 Probe.io is a simple tracking mechanism for Socket.io transport statistics. 
 
 <a href="http://probe.brevoort.com"><img src="http://probe.brevoort.com/images/run.png"/></a>
-<a href="http//probestats.brevoort.com"><img src="http://probe.brevoort.com/images/view.png"/></a>
+<a href="http://probestats.brevoort.com"><img src="http://probe.brevoort.com/images/view.png"/></a>
 
 Why?
 ====
