@@ -1,6 +1,6 @@
 Probe.io is a simple tracking mechanism for Socket.io transport statistics. 
 
-[[http://www.gravatar.com/avatar/7071119714e1a32441aca0c336657d3e?s=80]]
+<img src="http://www.gravatar.com/avatar/7071119714e1a32441aca0c336657d3e?s=80"/>
 
 Why?
 ====
