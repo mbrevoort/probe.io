@@ -9,8 +9,7 @@ ddoc =
   , shows: {} 
   , rewrites : 
     [ {from:"/", to:'index.html'}
-    , {from:"/api", to:'../../'}
-    , {from:"/api/*", to:'../../*'}
+    , {from:"/api/browser", to:'_view/byBrowser', query: { group: 'true'}}
     , {from:"/*", to:'*'}
     ]
   }

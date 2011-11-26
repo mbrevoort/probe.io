@@ -85,7 +85,7 @@ io.sockets.on('connection', function(client) {
 
         if (message === 'start serial') {
             for(var i=0; i < 10; i++) {
-                client.send("serial");
+                process.nextTick(function() { client.send("serial") });
             }
         }
 

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var jqxhr = $.get('/signals/_design/app/_view/byBrowser?group=true', function(data) {
+  var jqxhr = $.get('/api/browser', function(data) {
 
     var stats = {}
 
