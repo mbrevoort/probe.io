@@ -7,9 +7,8 @@
             timedOut: [],
             io_version: io.version
         },
-        debug = true,
-        transportTimeout = null,
-        totalTimeout = null;
+        debug = false,
+        transportTimeout = null;
 
     function serializeStats(stats) {
         return encodeURIComponent( global.io.JSON.stringify(stats) );
