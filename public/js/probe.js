@@ -1,13 +1,15 @@
 (function(global) {
 
     var stats = {
-        time: (new Date).getTime(),
-        transports: {},
-        aborted: [],
-        io_version: io.version
-    };
-
-    var debug = false;
+            time: (new Date).getTime(),
+            transports: {},
+            aborted: [],
+            timedOut: [],
+            io_version: io.version
+        },
+        debug = true,
+        transportTimeout = null,
+        totalTimeout = null;
 
     function serializeStats(stats) {
         return encodeURIComponent( global.io.JSON.stringify(stats) );
@@ -29,8 +31,9 @@
 
 
     function probeTransport(transports) {
-        if (transports.length === 0) return sendSignal();
 
+        // if there are not more transports, we're done
+        if (transports.length === 0) return sendSignal();
 
         var transport = transports.shift(),
             stat = {},
@@ -38,11 +41,19 @@
             serialCount = 0,
             serial_start = null,
             disconnect_time = null,
+            finished = false;
             start_time = (new Date).getTime();
 
-        if (transport == 'jsonp-polling' && navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+        // each transport will have 10s to run, else timeout
+        transportTimeout = setTimeout(function() {
+            stat.name = transport;
+            stats.timedOut.push(stat);
             abort();
-        }
+        }, 10000);
+
+        // if (transport == 'jsonp-polling' && navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+        //     abort();
+        // }
 
         io.transports = [transport];
 
@@ -74,6 +85,8 @@
         });
 
         socket.on('message', function(data) {
+            if(finished) return cleanup();
+            
             var now = (new Date).getTime();
 
             // if we receive a pong message it should be in response to our
@@ -107,49 +120,65 @@
         // window.io, etc.
         // Also send the signal beacon reporting the results
         socket.on('disconnect', function() {
+            if(finished) return cleanup();
+
             var now = (new Date).getTime();
+            log(transport + " disconnected", stat);
+
             stat.disconnect = Math.round(now - disconnect_time);
             stat.total = Math.round(now - start_time);
             probeFinished(transport, stat);
-            log(transport + " disconnected", stat);
-            cleanup()
-
         });
 
         socket.on('connect_failed', function() {
+            if(finished) return cleanup();
+
             log("connect failed for " + transport);
             abort();
         });
 
         socket.on('error', function(error) {
+            if(finished) return cleanup();
+
             abort();
             log("error", error);
         });
 
         function cleanup() {
+            finished = true;
+            if(transportTimeout) clearTimeout(transportTimeout);
             if(socket) {
                 socket.removeAllListeners('disconnect');
                 socket.removeAllListeners('connect');
                 socket.removeAllListeners('message');
+                socket.disconnect();
                 socket = null;
             }
-            probeTransport(transports);
         }
 
         function abort() {
             log("aborting transport " + transport);
+
             stats.aborted.push(transport);
+            stat.name = transport;
+            global.PROBE_TRANSPORT && global.PROBE_TRANSPORT(stat, false);
             cleanup();
+            probeTransport(transports);
         }
 
+        function probeFinished(transport, stat) {
+            if (stat.name == transport) {
+                stats.transports[transport] = stat;
+                global.PROBE_TRANSPORT && global.PROBE_TRANSPORT(stat, true);
+                cleanup();
+                probeTransport(transports);
+            }
+            
+        }
 
     }
 
     probeTransport(['websocket', 'xhr-polling', 'flashsocket', 'htmlfile', 'jsonp-polling']);
-
-    function probeFinished(transport, stat) {
-        if (stat.name == transport) stats.transports[transport] = stat;
-    }
 
     function log() {
         debug && global.console && global.console.log && global.console.log(arguments);

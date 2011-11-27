@@ -74,6 +74,10 @@ var io = io.listen(app);
 io.configure(function() {
     io.set('transports', ['websocket', 'xhr-polling', 'flashsocket', 'htmlfile', 'jsonp-polling']);
     io.disable('log');
+
+    // longer polling durations were causing the image beacon delivery to be delayed
+    // when a request was hanging but not closed by the server
+    io.set('polling duration', 11);
 });
 
 io.sockets.on('connection', function(client) {
